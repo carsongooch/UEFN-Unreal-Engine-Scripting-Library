@@ -39,25 +39,25 @@ tycoon_money_display := class(creative_device):
     @editable
     DoubleEarningsTrigger : trigger_device = trigger_device{}
     @editable
-    Model1 : creative_prop = creative_prop{}
+    upgrade1 : creative_prop = creative_prop{}
     @editable
-    Model2 : creative_prop = creative_prop{}
+    upgrade2 : creative_prop = creative_prop{}
     @editable
-    Model3 : animated_mesh_device = animated_mesh_device{}
+    upgrade3 : animated_mesh_device = animated_mesh_device{}
 
     var Money : int = 0
     var MoneyPerTick : int = 25
     @editable UpdateInterval : float = 1.0
     var CurrentModelIndex : int = 1
 
-    var Model3Transform : transform = transform{}
+    var upgrade3Transform : transform = transform{}
 
     FormatMoneyMessage<localizes>(Text:string):message = "{Text}"
 
     OnBegin<override>()<suspends>:void =
-        set Model3Transform = Model3.GetTransform()
-        Model2.Hide()
-        HideModel3()
+        set upgrade3Transform = upgrade3.GetTransform()
+        upgrade2.Hide()
+        Hideupgrade3()
         DoubleEarningsTrigger.TriggeredEvent.Subscribe(OnDoubleEarningsTriggered)
         UpdateMoneyDisplay()
         loop:
@@ -65,23 +65,23 @@ tycoon_money_display := class(creative_device):
             set Money += MoneyPerTick
             UpdateMoneyDisplay()
 
-    HideModel3() : void =
-        if (Model3.TeleportTo[vector3{X := 0.0, Y := 0.0, Z := -100000.0}, rotation{}]) {}
+    Hideupgrade3() : void =
+        if (upgrade3.TeleportTo[vector3{X := 0.0, Y := 0.0, Z := -100000.0}, rotation{}]) {}
 
-    ShowModel3() : void =
-        if (Model3.TeleportTo[Model3Transform.Translation, Model3Transform.Rotation]):
-            Model3.Play()
+    Showupgrade3() : void =
+        if (upgrade3.TeleportTo[upgrade3Transform.Translation, upgrade3Transform.Rotation]):
+            upgrade3.Play()
 
     OnDoubleEarningsTriggered(Agent:?agent):void =
         if (CurrentModelIndex = 1):
             set MoneyPerTick = 2000
-            Model1.Hide()
-            Model2.Show()
+            upgrade1.Hide()
+            upgrade2.Show()
             set CurrentModelIndex = 2
         else if (CurrentModelIndex = 2):
             set MoneyPerTick = 100000
-            Model2.Hide()
-            ShowModel3()
+            upgrade2.Hide()
+            Showupgrade3()
             set CurrentModelIndex = 3
             DoubleEarningsTrigger.Disable()
 
